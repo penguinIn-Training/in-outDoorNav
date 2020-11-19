@@ -1,0 +1,32 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "eslint **/*.js --fix",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "a-star": "^0.2.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "ol": "^6.4.3",
+    "ol-ext": "^3.1.16",
+    "openlayers-ext": "^3.1.5",
+    "parcel": "^1.12.4",
+    "pg": "^8.4.2",
+    "proj4": "^2.6.2",
+    "psql": "0.0.1",
+    "superagent": "^6.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-jquery": "^3.0.0",
+    "eslint-config-openlayers": "^14.0.0"
+  }
+}
