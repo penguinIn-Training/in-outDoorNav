@@ -4,7 +4,7 @@
 <p align="center">
   <img width="250" height="300" src="public/data/PenguinIN.png">
 </p>
-<p align="center" >
+<p align="center"  style="font-size:30px">
 <font size="+2" style="font-size:30px">🌍In-out door pathes 🌍:</font>
 </p>
 <p align="center">
