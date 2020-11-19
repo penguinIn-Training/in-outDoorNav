@@ -4,8 +4,8 @@
 <p align="center">
   <img width="250" height="300" src="public/data/PenguinIN.png">
 </p>
-<p align="center"  style="font-size:30px">
-<font size="+2" style="font-size:30px">🌍In-out door pathes 🌍:</font>
+<p align="center"  style="font-size:30%">
+<font size="+2" style="font-size:600%">🌍In-out door pathes 🌍:</font>
 </p>
 <p align="center">
 Hello ! <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
