@@ -1,12 +1,21 @@
+<!-- 
+[![Header](public/data/PenguinIN.png "Header")](public/data/PenguinIN.png) -->
 
-[![Header](public/data/PenguinIN.png "Header")](public/data/PenguinIN.png)
-# 🌍In-out door pathes 🌍:
+<p align="center">
+  <img width="250" height="300" src="public/data/PenguinIN.png">
+</p>
+<p align="center">
+<font size="+2">🌍In-out door pathes 🌍:</font>
+</p>
+<p align="center">
+Hello ! <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
+</p>
 
-## Hello ! <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
+
 
 <br />
 
-## # Description:
+## # Description: 📔
 This is a practice to search in the map using a Geocoding API, making indoor paths, outdoor path, in-out door paths, adding georeferencing images, draw "polygons - polyline - icons" in the map and find user location using the available tools in his device.
 
 <br />
@@ -40,24 +49,24 @@ This is a practice to search in the map using a Geocoding API, making indoor pat
 ### 3- OSRM API: ("https://router.project-osrm.org/route/v1/driving/${position.coords.longitude},${position.coords.latitude};${results1.lon},${results1.lat};${results.lon},${results.lat}?alternatives=true&overview=full&annotations=nodes&geometries=geojson"):
 > Its a routing API, used to find the path between **multiple** coordinate pairs on map "Out-door navigation".
 
-## # Libraries and Framworks:
+## # Libraries and Framworks: ✨
 ### 1- Open layers: for maps rendering.
 ### 2- jQuery: to write js easly and fast.
 
 <br />
 
-## # Dependances:
+## # Dependances: 👍
 ### 1- body-parser: allow the use of json body in post request.
 ### 2- cors: Cross-Origin Resource Sharing.
 ### 3- ejs: allow us to use templeting file type where we can mix js with html easly.
 ### 4- express: make a node server easly.
 
-## # Research about pest price/accuracy Geocoding API:
+## # Research about pest price/accuracy Geocoding API: 🔎
 >[Press me](public/data/bestGeocodingAPI.xlsx)
 
 <br />
 
-## # Maps layers:
+## # Maps layers: 🗺️
 ### With no keys:
 - Open Street Map Standard.
 - Open Street Map Humanitarian.
@@ -71,3 +80,4 @@ This is a practice to search in the map using a Geocoding API, making indoor pat
 
 ## # You can try the application using this link:
 >[Enjoy 😉](https://geo-referencing.herokuapp.com/)
+
