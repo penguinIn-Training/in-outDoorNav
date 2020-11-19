@@ -2,13 +2,8 @@
 'use strict';
 console.log('Hi');
 
-
-var gate={
-  1: 1,
-
-};
-
-var graticule = new ol.layer.Graticule({
+// Grid layer
+var graticule = new ol.layer.Graticule({ 
   // the style to use for the lines, optional.
   strokeStyle: new ol.style.Stroke({
     color: 'rgba(207, 0, 15, 1)',
@@ -19,6 +14,11 @@ var graticule = new ol.layer.Graticule({
   visible: false,
   wrapX: false,
 });
+////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////Define the map for///////////////////////////////
+
 var map = new ol.Map({
   interactions: ol.interaction.defaults().extend([new ol.interaction.DragRotateAndZoom()]),
   layers: [
@@ -37,10 +37,11 @@ var map = new ol.Map({
     // maxZoom: 19,
   }),
 });
+
 // Change from mercator to lon/lat
 var meters2degress = function(x,y) {
   var lon = x *  180 / 20037508.34 ;
-  //thanks magichim @ github for the correction
+  // thanks magichim @ github for the correction
   var lat = Math.atan(Math.exp(y * Math.PI / 20037508.34)) * 360 / Math.PI - 90; 
   return [lon, lat];
 };
@@ -56,12 +57,10 @@ map.on('click',function(e){
       $('#to').val(feature.values_.name.split(' ')[1]); 
     }
   });});
+////////////////////////////////////////////////////////////////////////////////
+
 
 ///////////////////////////////Change map terrain///////////////////////////////
-
-
-
-
 
 const openStreetMapStandard = new ol.layer.Tile({
   source: new ol.source.OSM(),
@@ -76,6 +75,7 @@ const openStreetMapHumanitarian = new ol.layer.Tile({
   visible:false,
   title: 'openStreetMapHumanitarian',
 });
+
 const stamenTerrain = new ol.layer.Tile({
   source: new ol.source.XYZ({
     url:'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
@@ -84,6 +84,7 @@ const stamenTerrain = new ol.layer.Tile({
   visible:false,
   title: 'stamenTerrain',
 });
+
 const sateliteTerrain = new ol.layer.Tile({
   source: new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -92,6 +93,7 @@ const sateliteTerrain = new ol.layer.Tile({
   visible:false,
   title: 'sateliteTerrain',
 });
+
 const bingSateliteTerrain = new ol.layer.Tile({
   source: new ol.source.BingMaps({
     key: 'AvULmzfOTcs6LuAIaoZhatEkngR7N1X1wwaxoOHqN-QEIbDkY6HWGd23_04Abynr',
@@ -103,7 +105,8 @@ const bingSateliteTerrain = new ol.layer.Tile({
   visible:false,
   title: 'bingSateliteTerrain',
 });
-  // layer group 
+
+// layer group 
 const baseLayerGroup = new ol.layer.Group({
   layers:[
     openStreetMapStandard,openStreetMapHumanitarian,stamenTerrain,sateliteTerrain,bingSateliteTerrain,
@@ -210,22 +213,22 @@ map.addControl(new ol.control.LayerSwitcher({ extent:true }));
 
 //////////////////////////Draw in  map with diff zoom///////////////////////////
 
-const fillStyle=new ol.style.Fill({
-  color: [84,118,255,1],
-});
+// const fillStyle=new ol.style.Fill({
+//   color: [84,118,255,1],
+// });
 
-const strokeStyle=new ol.style.Stroke({
-  color: [46,45,45,1],
-  width:1.2,
-});
+// const strokeStyle=new ol.style.Stroke({
+//   color: [46,45,45,1],
+//   width:1.2,
+// });
 
-const circleStyle = new ol.style.Circle({
-  fill: new ol.style.Fill({
-    color:[245,49,5,1],
-  }),
-  radius: 7,
-  stroke: strokeStyle,
-});
+// const circleStyle = new ol.style.Circle({
+//   fill: new ol.style.Fill({
+//     color:[245,49,5,1],
+//   }),
+//   radius: 7,
+//   stroke: strokeStyle,
+// });
 
 // const penguinInLayer = new ol.layer.VectorImage({
 //   source: new ol.source.Vector({
@@ -430,7 +433,7 @@ function AddPoint(X,Y,ID){
 ////////////////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////Find shortest path and draw it///////////////////////
+/////////////////////Find shortest path in-door and draw it////////////////////
 /**
  * Find shortest path and draw it
  */
@@ -438,7 +441,7 @@ async function  findPath(path,yes){
   let finalPathArray=[];
   var newArray=[];
   var reutunedArray=[];
-  console.log('paaaaaaaaaaaaaaaaaaaaaaaath',coordinateForPath[path[0]]);
+  // console.log('paaaaaaaaaaaaaaaaaaaaaaaath',coordinateForPath[path[0]]);
   await fetch('/shortestpath', {
     method: 'POST',
     headers: {
@@ -495,7 +498,7 @@ async function  findPath(path,yes){
       // console.log('finalPathArrayhereeeeee',arr);
       finalPathArray = arr;
       var coordinates =finalPathArray;
-      console.log(coordinates,'coordinatescoordinates');
+      // console.log(coordinates,'coordinatescoordinates');
       var meters2degress = function(x,y) {
         var lon = x *  180 / 20037508.34 ;
         //thanks magichim @ github for the correction
@@ -507,7 +510,7 @@ async function  findPath(path,yes){
         newArray.push(arrnew[1],arrnew[0]);
         reutunedArray.push(arrnew[1],arrnew[0]);
       });
-      console.log(newArray,'newArraynewArrayhere');
+      // console.log(newArray,'newArraynewArrayhere');
       // reutunedArray=newArray;
       if(yes){
         var polyline=ol.format.Polyline.encodeDeltas(
@@ -594,7 +597,10 @@ async function  findPath(path,yes){
     });
   return reutunedArray;
 }
+////////////////////////////////////////////////////////////////////////////////
 
+
+//////////////////specify user location when start application//////////////////
 
 // function getLocation() {
 //   if (navigator.geolocation) {
@@ -630,7 +636,6 @@ async function  findPath(path,yes){
 //   map.addLayer(myLocationLayer);//layer activation
 // }
 var poiData={};
-
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -747,7 +752,7 @@ function getpath(){
 ////////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////Out door navigation//////////////////////////////
+///////////////////////////////In-Out door navigation//////////////////////////////
 /**
  * Out door navigation
  */
@@ -763,7 +768,7 @@ var outnavResult = document.getElementById('outnav-result');//for search
 
 async function Outdoor(query,query2) {
   resultSpan.innerHTML = 'Searching ...';
-  console.log(query);
+  // console.log(query);
   
   fetch(`https://eu1.locationiq.com/v1/search.php?key=d4328e89827d71&q=${query}&format=json`)
     .then(function (response) {
@@ -852,13 +857,13 @@ async function Outdoor(query,query2) {
         //http://router.project-osrm.org/route/v1/driving/${position.coords.longitude},${position.coords.latitude};${results.lon},${results.lat}?overview=false
         async function  url(){
           if(query2){
-            console.log('query2query2query2query2',query2);
+            // console.log('query2query2query2query2',query2);
             const response1 = await fetch(`https://eu1.locationiq.com/v1/search.php?key=d4328e89827d71&q=${query2}&format=json`);
             const json1 =await response1.json(); 
             const results1 = json1[0];
             return `https://router.project-osrm.org/route/v1/driving/${position.coords.longitude},${position.coords.latitude};${results1.lon},${results1.lat};${results.lon},${results.lat}?alternatives=true&overview=full&annotations=nodes&geometries=geojson`;
           }else {
-            console.log('hellllllllllllllllllllllllllllllllllllllllloooooooooooooooooooooooooooooooooooooooooooooooo');
+            // console.log('hellllllllllllllllllllllllllllllllllllllllloooooooooooooooooooooooooooooooooooooooooooooooo');
             return `https://router.project-osrm.org/route/v1/driving/${position.coords.longitude},${position.coords.latitude};${results.lon},${results.lat}?alternatives=true&overview=full&annotations=nodes&geometries=geojson`;
           }
         }
@@ -866,20 +871,20 @@ async function Outdoor(query,query2) {
         // console.log('urlurlurlurlurlurlurl',await url());
         fetch( await url())
           .then(function (response) {
-            console.log('sadsadasdsadasd',response);
+            // console.log('sadsadasdsadasd',response);
             return response.json();
           })
           .then(async function (json) {
             var finalCoord=[];
-            console.log('jsonjsonjson',json);
-            console.log(json.routes[0].geometry.coordinates);
-            console.log(json.routes[0].legs[0].annotation.nodes);
+            // console.log('jsonjsonjson',json);
+            // console.log(json.routes[0].geometry.coordinates);
+            // console.log(json.routes[0].legs[0].annotation.nodes);
             var results = json.routes[0].geometry.coordinates; 
             results.forEach((ele)=>{
               finalCoord.push(ele[1],ele[0]);
             });
             var indoorPath =await findPath([edgeID,poiInput]);
-            console.log('resultsresults',indoorPath,finalCoord);
+            // console.log('resultsresults',indoorPath,finalCoord);
             finalCoord = finalCoord.concat(indoorPath);
             var polyline=ol.format.Polyline.encodeDeltas(
               finalCoord,
@@ -895,13 +900,7 @@ async function Outdoor(query,query2) {
               dataProjection: 'EPSG:4326',
               featureProjection: 'EPSG:3857',
             }));
-      
-            //0: -5751733.504402943
-            //1: -3317367.02757665
-      
-            // coordinates.unshift(getLocation());
-            // console.log('coordinates',coordinates);
-            
+
             var routeCoords = route.getCoordinates();
             // console.log('routeCoords', routeCoords);
             var routeLength = routeCoords.length;
@@ -910,21 +909,24 @@ async function Outdoor(query,query2) {
               type: 'route',
               geometry: route,
             });
+
             var geoMarker = /** @type Feature<import("../src/ol/geom/Point").default> */ (new ol.Feature(
               {
                 type: 'geoMarker',
                 geometry: new ol.geom.Point(routeCoords[0]),
               },
             ));
+
             var startMarker = new ol.Feature({
               type: 'icon',
               geometry: new ol.geom.Point(routeCoords[0]),
             });
+
             var endMarker = new ol.Feature({
               type: 'icon',
               geometry: new ol.geom.Point(routeCoords[routeLength - 1]),
             });
-      
+
             var styles = {
               route: new ol.style.Style({
                 stroke: new ol.style.Stroke({
@@ -949,8 +951,7 @@ async function Outdoor(query,query2) {
                 }),
               }),
             };
-      
-      
+            
             var vectorLayer4 = new ol.layer.Vector({
               name:'vectorLayer4',
               source: new ol.source.Vector({
@@ -960,18 +961,16 @@ async function Outdoor(query,query2) {
                 return styles[feature.get('type')];
               },
             });
+
             map.getLayers().forEach(layer => {
               if (layer && layer.get('name') === 'vectorLayer4') {
                 map.removeLayer(layer);
                 
               }});
+
             map.addLayer(vectorLayer4);//layer activation
-
-          });
-
-        
+          });       
       }
-
     });
 }
 
@@ -982,20 +981,8 @@ outnavButton.onclick = function (event) {
   poiInput = Number($('#poi-input').val()); //for search
   edgeID = Number($('#from').val()); //for search
   Outdoor(outnavInput.value,secPointInput.value);
-
   event.preventDefault();
 };
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////In-Out door navigation//////////////////////////////
-/**
- * In-Out door navigation
- */
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
