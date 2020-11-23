@@ -212,7 +212,7 @@ function resetSource () {
   var selectedFloor='';
   selectedFloor =$('#type').val();
   // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
-  var url='./data/Waseela.jpg';
+  var url='';
   if(selectedFloor=='floor1'){
     url='./data/PenguinINZoom1.png';
     sx=0.00441176470588235;
@@ -269,7 +269,7 @@ function resetSource () {
   selectedFloor='';
   selectedFloor =$('#type').val();
   // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
-  url='./data/Waseela.jpg';
+  url='';
   if(selectedFloor=='floor1'){
     url='./data/PenguinIN.png';
     sx=0.00441176470588235;
