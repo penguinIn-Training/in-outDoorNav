@@ -1090,6 +1090,49 @@ outnavButton.onclick = function (event) {
   Outdoor(outnavInput.value,secPointInput.value);
   event.preventDefault();
 };
+////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+var source = new ol.source.Vector({wrapX: false});
+
+var vectorDraw = new ol.layer.Vector({
+  source: source,
+});
+
+map.addLayer(vectorDraw);
+
+var typeSelect = document.getElementById('type');
+
+var draw; // global so we can remove it later
+function addInteraction() {
+  var value = typeSelect.value;
+  if (value !== 'None' && value !== 'Rectangular') {
+    draw = new ol.interaction.Draw({
+      source: source,
+      type: typeSelect.value,
+    });
+    map.addInteraction(draw);
+  }
+  if (value !== 'None' && value == 'Rectangular') {
+    draw = new ol.interaction.Draw({
+      source: source,
+      type: 'Circle',
+      geometryFunction:ol.interaction.Draw.createBox(),
+    });
+    map.addInteraction(draw);
+  }
+}
+
+/**
+ * Handle change event.
+ */
+typeSelect.onchange = function () {
+  map.removeInteraction(draw);
+  addInteraction();
+};
+
+addInteraction();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
