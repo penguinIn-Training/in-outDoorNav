@@ -144,34 +144,59 @@ for(let baseLayerElement of baseLayerElements){
  * TO make GeoImage "Geo Refferance layer"
  */
 
-$('.option').on('change', resetSource);
-var x = Number($('#x').val());
-var y = Number($('#y').val());
-var sx = Number($('#w').val());
-var sy = Number($('#h').val());
-var xmin = Number($('#xmin').val());
-var ymin = Number($('#ymin').val());
-var xmax = Number($('#xmax').val());
-var ymax = Number($('#ymax').val());
+$('.option,#type').on('change', resetSource);
+// var x = Number($('#x').val());
+// var y = Number($('#y').val());
+// var sx = Number($('#w').val());
+// var sy = Number($('#h').val());
+// var xmin = Number($('#xmin').val());
+// var ymin = Number($('#ymin').val());
+// var xmax = Number($('#xmax').val());
+// var ymax = Number($('#ymax').val());
+// var selectedFloor='';
+// // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
+// var url='./data/Waseela.jpg';
+// if(selectedFloor=='floor1'){
+//   url='./data/PenguinIN.jpg';
+//   sx=0.00441176470588235;
+//   sy=0.00441176470588235;
+//   x=3992579.250256516;
+//   y=3760172.928780113;
+// }else if(selectedFloor=='floor2'){
+//   url='./data/Waseela.jpg';
+//   sx=0.0155172413793103;
+//   sy=0.0155172413793103;
+//   x=3992581.25025652;
+//   y=3760166.92878011;
+// }
+// console.log('selectedFloor',selectedFloor);
+// var geoimg = new ol.layer.GeoImage({
+//   name: 'Georef',
+//   opacity: .7,
+//   source: new ol.source.GeoImage({
+//     url: url,
+//     imageCenter: [x,y],
+//     imageScale: [sx,sy],
+//     imageCrop: [xmin,ymin,xmax,ymax],
+//     //imageMask: [[273137.343,6242443.14],[273137.343,6245428.14],[276392.157,6245428.14],[276392.157,6242443.14],[273137.343,6242443.14]],
+//     imageRotate: Number($('#rotate').val()*Math.PI/180),
+//     projection: 'EPSG:3857',
+//     attributions: [ '<a href=\'http://www.geoportail.gouv.fr/actualite/181/telechargez-les-cartes-et-photographies-aeriennes-historiques\'>Photo historique &copy; IGN</a>' ],
+//   }),
+// });map.addLayer(geoimg);
+// // });
 
-var geoimg = new ol.layer.GeoImage({
-  name: 'Georef',
-  opacity: .7,
-  source: new ol.source.GeoImage({
-    url: './data/PenguinIN.png',
-    imageCenter: [x,y],
-    imageScale: [sx,sy],
-    imageCrop: [xmin,ymin,xmax,ymax],
-    //imageMask: [[273137.343,6242443.14],[273137.343,6245428.14],[276392.157,6245428.14],[276392.157,6242443.14],[273137.343,6242443.14]],
-    imageRotate: Number($('#rotate').val()*Math.PI/180),
-    projection: 'EPSG:3857',
-    attributions: [ '<a href=\'http://www.geoportail.gouv.fr/actualite/181/telechargez-les-cartes-et-photographies-aeriennes-historiques\'>Photo historique &copy; IGN</a>' ],
-  }),
-});
-map.addLayer(geoimg);
+
+
 
 
 function resetSource () {
+  map.getLayers().forEach(layer => {
+    if (layer && layer.get('name') === 'Georef') {
+      map.removeLayer(layer);
+      
+    }
+  });
   // console.log('here2');
   var x = Number($('#x').val());
   var y = Number($('#y').val());
@@ -183,23 +208,99 @@ function resetSource () {
   var ymax = Number($('#ymax').val());
   // var angleRotate = Number($('#rotate').val());
   // let angle = -270 + angleRotate;
+
+  var selectedFloor='';
+  selectedFloor =$('#type').val();
+  // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
+  var url='./data/Waseela.jpg';
+  if(selectedFloor=='floor1'){
+    url='./data/PenguinINZoom1.png';
+    sx=0.00441176470588235;
+    sy=0.00441176470588235;
+    x=3992579.250256516;
+    y=3760172.928780113;
+  }else if(selectedFloor=='floor2'){
+    url='./data/WaseelaZoom1.png';
+    sx=0.0155172413793103;
+    sy=0.0155172413793103;
+    x=3992580.25025652;
+    y=3760167.92878011;
+  }
+  console.log('selectedFloor',selectedFloor);
+  var geoimg = new ol.layer.GeoImage({
+    name: 'Georef',
+    opacity: .7,
+    minZoom:18,
+    maxZoom:21,
+    source: new ol.source.GeoImage({
+      url: url,
+      imageCenter: [x,y],
+      imageScale: [sx,sy],
+      imageCrop: [xmin,ymin,xmax,ymax],
+      //imageMask: [[273137.343,6242443.14],[273137.343,6245428.14],[276392.157,6245428.14],[276392.157,6242443.14],[273137.343,6242443.14]],
+      imageRotate: Number($('#rotate').val()*Math.PI/180),
+      projection: 'EPSG:3857',
+      attributions: [ '<a href=\'http://www.geoportail.gouv.fr/actualite/181/telechargez-les-cartes-et-photographies-aeriennes-historiques\'>Photo historique &copy; IGN</a>' ],
+    }),
+  });
+
+
+
   geoimg.getSource().setCenter([x,y]);
   geoimg.getSource().setRotation($('#rotate').val()*Math.PI/180);
   geoimg.getSource().setScale([sx,sy]);
   geoimg.getSource().setCrop([xmin,ymin,xmax,ymax]);
 
   // pointer2.setGeometry(new ol.geom.Point(([3992566.263943126+.004*(Number(ele.Y1)*Math.cos(angle*Math.PI/180)+ Number(ele.X1)*Math.sin(angle*Math.PI/180) )  , 3760166.192932204+.004*(Number(ele.X1)*Math.cos(angle*Math.PI/180)- Number(ele.Y1)*Math.sin(angle*Math.PI/180) )])));
-  var crop = geoimg.getSource().getCrop();
-  $('#xmin').val(crop[0]);
-  $('#ymin').val(crop[1]);
-  $('#xmax').val(crop[2]);
-  $('#ymax').val(crop[3]); 
+  // var crop = geoimg.getSource().getCrop();
+  // $('#xmin').val(crop[0]);
+  // $('#ymin').val(crop[1]);
+  // $('#xmax').val(crop[2]);
+  // $('#ymax').val(crop[3]); 
+
   map.getLayers().forEach(layer => {
-    if (layer && layer.get('name') === 'vectorLayer2') {
+    if (layer && layer.get('name') === 'Georef') {
       map.removeLayer(layer);
       
     }
   });
+
+
+  selectedFloor='';
+  selectedFloor =$('#type').val();
+  // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
+  url='./data/Waseela.jpg';
+  if(selectedFloor=='floor1'){
+    url='./data/PenguinIN.png';
+    sx=0.00441176470588235;
+    sy=0.00441176470588235;
+    x=3992579.250256516;
+    y=3760172.928780113;
+  }else if(selectedFloor=='floor2'){
+    url='./data/Waseela.png';
+    sx=0.0155172413793103;
+    sy=0.0155172413793103;
+    x=3992580.25025652;
+    y=3760167.92878011;
+  }
+  console.log('selectedFloor',selectedFloor);
+  var geoimg1 = new ol.layer.GeoImage({
+    name: 'Georef',
+    opacity: .7,
+    minZoom:21,
+    source: new ol.source.GeoImage({
+      url: url,
+      imageCenter: [x,y],
+      imageScale: [sx,sy],
+      imageCrop: [xmin,ymin,xmax,ymax],
+      //imageMask: [[273137.343,6242443.14],[273137.343,6245428.14],[276392.157,6245428.14],[276392.157,6242443.14],[273137.343,6242443.14]],
+      imageRotate: Number($('#rotate').val()*Math.PI/180),
+      projection: 'EPSG:3857',
+      attributions: [ '<a href=\'http://www.geoportail.gouv.fr/actualite/181/telechargez-les-cartes-et-photographies-aeriennes-historiques\'>Photo historique &copy; IGN</a>' ],
+    }),
+  });
+  map.addLayer(geoimg1);
+  map.addLayer(geoimg);
   printPoints();
 }
 resetSource () ;
@@ -424,7 +525,7 @@ function AddPoint(X,Y,ID){
       source: vectorSource3,
       name:'vectorSource3',
       maxZoom:40,
-      minZoom:21,
+      minZoom:23,
     });
     // console.log(map.getLayers(vectorLayer2),'layer');
     map.addLayer(vectorLayer3);//layer activation 
@@ -461,7 +562,6 @@ async function  findPath(path,yes){
       map.getLayers().forEach(layer => {
         if (layer && layer.get('name') === 'vectorLayer3') {
           map.removeLayer(layer);
-          
         }});
       let val1 =Math.abs(coordinateForPath[res.getPathToPoIResult[1]][0][0] - coordinateForPath[path[0]][0][0]) + Math.abs(coordinateForPath[res.getPathToPoIResult[1]][0][1] - coordinateForPath[path[0]][0][1]);
       let val2 =Math.abs(coordinateForPath[res.getPathToPoIResult[1]][0][0] - coordinateForPath[path[0]][1][0]) +Math.abs(coordinateForPath[res.getPathToPoIResult[1]][0][1] - coordinateForPath[path[0]][1][1]);
@@ -592,6 +692,12 @@ async function  findPath(path,yes){
             return styles[feature.get('type')];
           },
         });
+
+        map.getLayers().forEach(layer => {
+          if (layer && layer.get('name') === 'vectorLayer4') {
+            map.removeLayer(layer);
+            
+          }});
         map.addLayer(vectorLayer3);//layer activation
       }
     });
@@ -733,6 +839,7 @@ function gitAllPoi(){
       var layer = new ol.layer.Vector({
         source: source,
         style: styles,
+        minZoom: 22,
       });
       map.addLayer(layer);
 

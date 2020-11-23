@@ -25,6 +25,47 @@
                 <div id = 'out-map' class="map">
                 <div id="map" class="map"></div>
                 </div>
+                <!-- Select floor -->
+                <!-- <form class="form-inline">
+                  <label>Action type &nbsp;</label>
+                    <select id="type" class="form-control">
+                      <option value="none" >None</option>
+                      <option value="floor1"selected>Floorw 1</option>
+                      <option value="floor2">Floorw 2</option>
+                    </select>
+                  <span id="status">&nbsp;0 selected features</span>
+                </form> -->
+
+                                <!-- options for georeferancing -->
+                                <div class="options">
+                                  <h2>Options:</h2>
+                                  <label>Action type &nbsp;</label>
+                                  <select id="type" class="form-control">
+                                    <option value="none" >None</option>
+                                    <option value="floor1"selected>Floorw 1</option>
+                                    <option value="floor2">Floorw 2</option>
+                                  </select>
+                                  <div class="hidden">
+                                    <span id="status">&nbsp;0 selected features</span>
+                                      Rotation: <input id="rotate" class="option" type="number" value="-76.5" step="0.1" />
+                                      <br />
+                                      Center: 
+                                      <input id ="x" class="option" type="number" value="3992579.250256516" step=".1" />
+                                      <input id ="y" class="option" type="number" value="3760172.928780113" step=".10" />
+                                      <br />
+                                      Scale:
+                                      <input id ="w" class="option" type="number" step="0.0001" value ="0.00441176470588235" />
+                                      <input id ="h" class="option" type="number" step="0.0001" value ="0.00441176470588235" />
+                                      <br />
+                                      Crop:
+                                      <input id ="xmin" class="option" type="number" value="0" step="10" />
+                                      <input id ="ymin" class="option" type="number" value ="0" step="10" />
+                                      <input id ="xmax" class="option" type="number" value="5766" step="10" />
+                                      <input id ="ymax" class="option" type="number" value ="5580" step="10" />
+                                  </div>
+                                </div>
+
+                <!-- Search in out -->
                 <span id="outnav-result"></span>
                 <form class="form-go">
                   <div class = "div-50">
@@ -40,25 +81,7 @@
                   </div>
                   <button id="outnav-button" class="btn1">Lets go!</button>
                 </form>
-                <!-- options for georeferancing -->
-                <div class="options">
-                    <h2>Options:</h2>
-                    Rotation: <input id="rotate" class="option" type="number" value="-76.5" step="0.1" />
-                    <br />
-                    Center: 
-                    <input id ="x" class="option" type="number" value="3992579.250256516" />
-                    <input id ="y" class="option" type="number" value="3760172.928780113" />
-                    <br />
-                    Scale:
-                    <input id ="w" class="option" type="number" step="0.0001" value ="0.00441176470588235" />
-                    <input id ="h" class="option" type="number" step="0.0001" value ="0.00441176470588235" />
-                    <br />
-                    Crop:
-                    <input id ="xmin" class="option" type="number" value="0" step="10" />
-                    <input id ="ymin" class="option" type="number" value ="0" step="10" />
-                    <input id ="xmax" class="option" type="number" value="5766" step="10" />
-                    <input id ="ymax" class="option" type="number" value ="5580" step="10" />
-                </div>
+
                 <div id="form" class="form-go">
                     <div class = "div-50">
                       <h2>Indoor bath:</h2>
