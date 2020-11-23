@@ -51,11 +51,12 @@ map.on('click',function(e){
   console.log('Coordinate in LON|LAT',meters2degress(e.coordinate[0],e.coordinate[1]));
   map.forEachFeatureAtPixel(e.pixel,function(feature,layer){
     console.log('Feature: just take the number for ID',feature.getProperties());
-    if(feature.values_.name.split(' ')[0] != 'poi'){
-      $('#from').val(feature.values_.name.split(' ')[1]); 
-    }else{
-      $('#to').val(feature.values_.name.split(' ')[1]); 
-    }
+    if(feature.values_.name){
+      if(feature.values_.name.split(' ')[0] != 'poi'){
+        $('#from').val(feature.values_.name.split(' ')[1]); 
+      }else{
+        $('#to').val(feature.values_.name.split(' ')[1]); 
+      }}
   });});
 ////////////////////////////////////////////////////////////////////////////////
 
