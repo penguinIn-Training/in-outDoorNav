@@ -145,7 +145,7 @@ for(let baseLayerElement of baseLayerElements){
  * TO make GeoImage "Geo Refferance layer"
  */
 
-$('.option,#type').on('change', resetSource);
+$('.option,#floor').on('change', resetSource);
 // var x = Number($('#x').val());
 // var y = Number($('#y').val());
 // var sx = Number($('#w').val());
@@ -199,33 +199,37 @@ function resetSource () {
     }
   });
   // console.log('here2');
-  var x = Number($('#x').val());
-  var y = Number($('#y').val());
-  var sx = Number($('#w').val());
-  var sy = Number($('#h').val());
+  var x1 = Number($('#x1').val());
+  var y1 = Number($('#y1').val());
+  var sx1 = Number($('#w1').val());
+  var sy1 = Number($('#h1').val());
+  var x2 = Number($('#x2').val());
+  var y2 = Number($('#y2').val());
+  var sx2 = Number($('#w2').val());
+  var sy2 = Number($('#h2').val());
   var xmin = Number($('#xmin').val());
   var ymin = Number($('#ymin').val());
   var xmax = Number($('#xmax').val());
   var ymax = Number($('#ymax').val());
   // var angleRotate = Number($('#rotate').val());
   // let angle = -270 + angleRotate;
-
+  var sx,sy,x,y;
   var selectedFloor='';
-  selectedFloor =$('#type').val();
+  selectedFloor =$('#floor').val();
   // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
   var url='';
   if(selectedFloor=='floor1'){
     url='./data/PenguinINZoom1.png';
-    sx=0.00441176470588235;
-    sy=0.00441176470588235;
-    x=3992579.250256516;
-    y=3760172.928780113;
+    sx=sx1;
+    sy=sy1;
+    x=x1;
+    y=y1;
   }else if(selectedFloor=='floor2'){
     url='./data/WaseelaZoom1.png';
-    sx=0.0155172413793103;
-    sy=0.0155172413793103;
-    x=3992580.25025652;
-    y=3760167.92878011;
+    sx=sx2;
+    sy=sy2;
+    x=x2;
+    y=y2;
   }
   console.log('selectedFloor',selectedFloor);
   var geoimg = new ol.layer.GeoImage({
@@ -268,7 +272,7 @@ function resetSource () {
 
 
   selectedFloor='';
-  selectedFloor =$('#type').val();
+  selectedFloor =$('#floor').val();
   // $('#type').on('change', ()=>{selectedFloor =$('#type').val();
   url='';
   if(selectedFloor=='floor1'){
