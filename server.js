@@ -2,7 +2,7 @@
 
 // Load environment variables from .env
 require('dotenv').config();
-// const client = require('./DBconection.js');
+const client = require('./DBconection.js');
 // Application dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -57,13 +57,13 @@ server.get('/', (req,res)=>{
   res.render('./index',{names:'names',attend:'attend' });
 });
 
-// client.connect()
-// .then(()=>{
-server.listen(PORT, () => console.log(`App is listening on ${PORT}`,Date()));
-// })
+client.connect()
+  .then(()=>{
+    server.listen(PORT, () => console.log(`App is listening on ${PORT}`,Date()));
+  })
 // .catch(e => {console.log(e);});
-// .then(()=> console.log('Connected Successfully'))
-// .catch(e=>console.log('hi'));
+  .then(()=> console.log('Connected Successfully'))
+  .catch(e=>console.log(e));
 
 server.use('*',(req,res)=>{
   res.status(404).send('Sorry! something went wrong :*(');
