@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 'use strict';
 console.log('Hi');
-
+var imageUrl='';
 // Grid layer
 var graticule = new ol.layer.Graticule({ 
   // the style to use for the lines, optional.
@@ -17,9 +17,124 @@ var graticule = new ol.layer.Graticule({
 ////////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////Define the map for///////////////////////////////
+//////////////////////////////Define the map1 for///////////////////////////////
+// Map views always need a projection.  Here we just want to map image
+// coordinates directly to map coordinates, so we create a projection that uses
+// the image extent in pixels.
 
+var extent = [0, 0, 1024, 968];
+var projection = new ol.proj.Projection({
+  code: 'xkcd-image',
+  units: 'pixels',
+  extent: extent,
+});
+var PointerInteraction =ol.interaction.Pointer;
+var Drag = /*@__PURE__*/(function (PointerInteraction) {
+  function Drag() {
+    PointerInteraction.call(this, {
+      handleDownEvent: handleDownEvent,
+      handleDragEvent: handleDragEvent,
+      handleMoveEvent: handleMoveEvent,
+      handleUpEvent: handleUpEvent,
+    });
+
+    /**
+     * @type {import("../src/ol/coordinate.js").Coordinate}
+     * @private
+     */
+    this.coordinate_ = null;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.cursor_ = 'pointer';
+
+    /**
+     * @type {Feature}
+     * @private
+     */
+    this.feature_ = null;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.previousCursor_ = undefined;
+  }
+
+  if ( PointerInteraction ) Drag.__proto__ = PointerInteraction;
+  Drag.prototype = Object.create( PointerInteraction && PointerInteraction.prototype );
+  Drag.prototype.constructor = Drag;
+
+  return Drag;
+}(PointerInteraction));
+
+/**
+ * @param {import("../src/ol/MapBrowserEvent.js").default} evt Map browser event.
+ * @return {boolean} `true` to start the drag sequence.
+ */
+function handleDownEvent(evt) {
+  var map = evt.map;
+
+  var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+    return feature;
+  });
+
+  if (feature) {
+    this.coordinate_ = evt.coordinate;
+    this.feature_ = feature;
+  }
+
+  return !!feature;
+}
+
+/**
+ * @param {import("../src/ol/MapBrowserEvent.js").default} evt Map browser event.
+ */
+function handleDragEvent(evt) {
+  var deltaX = evt.coordinate[0] - this.coordinate_[0];
+  var deltaY = evt.coordinate[1] - this.coordinate_[1];
+  console.log(this.coordinate_[0],this.coordinate_[1]);
+  var geometry = this.feature_.getGeometry();
+  geometry.translate(deltaX, deltaY);
+
+  this.coordinate_[0] = evt.coordinate[0];
+  this.coordinate_[1] = evt.coordinate[1];
+}
+
+/**
+ * @param {import("../src/ol/MapBrowserEvent.js").default} evt Event.
+ */
+function handleMoveEvent(evt) {
+  if (this.cursor_) {
+    var map = evt.map;
+    var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+      return feature;
+    });
+    var element = evt.map.getTargetElement();
+    if (feature) {
+      if (element.style.cursor != this.cursor_) {
+        this.previousCursor_ = element.style.cursor;
+        element.style.cursor = this.cursor_;
+      }
+    } else if (this.previousCursor_ !== undefined) {
+      element.style.cursor = this.previousCursor_;
+      this.previousCursor_ = undefined;
+    }
+  }
+}
+
+/**
+ * @return {boolean} `false` to stop the drag sequence.
+ */
+function handleUpEvent() {
+  this.coordinate_ = null;
+  this.feature_ = null;
+  return false;
+}
 var map = new ol.Map({
+
   interactions: ol.interaction.defaults().extend([new ol.interaction.DragRotateAndZoom()]),
   layers: [
     new ol.layer.Tile({
@@ -37,6 +152,36 @@ var map = new ol.Map({
     // maxZoom: 19,
   }),
 });
+map.addInteraction(new Drag());
+var firstPoint1 = new ol.Feature(new ol.geom.Point([3992606.9437501617, 3760172.1916554505]));
+          
+var secPoint1 = new ol.Feature(new ol.geom.Point([3992597.389121626, 3760174.5803125845]));
+
+var marks1=new ol.layer.Vector({
+  zIndex:1,
+  source: new ol.source.Vector({
+    features: [firstPoint1,secPoint1],
+  }),
+  style: new ol.style.Style({
+    image: new ol.style.Icon({
+      anchor: [0, 0],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'pixels',
+      opacity: 0.95,
+      src: 'data/dot.svg',
+    }),
+    stroke: new ol.style.Stroke({
+      width: 1,
+      color: [255, 0, 0, 1],
+    }),
+    fill: new ol.style.Fill({
+      color: [0, 0, 255, 0.6],
+    }),
+  }),
+});
+
+//layer activation
+map.addLayer(marks1);
 
 // Change from mercator to lon/lat
 var meters2degress = function(x,y) {
@@ -58,6 +203,219 @@ map.on('click',function(e){
         $('#to').val(feature.values_.name.split(' ')[1]); 
       }}
   });});
+////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////Define the map2 for///////////////////////////////
+
+
+var map1 = new ol.Map({
+  interactions: ol.interaction.defaults().extend([new Drag()]),
+  layers: [],
+  target: 'map1',
+  view: new ol.View({
+    projection: projection,
+    center: ol.extent.getCenter(extent),
+    zoom: 0,
+    maxZoom: 8,
+  }),
+});
+
+
+var ImageLayer= new ol.layer.Image({
+  source: new ol.source.ImageStatic({
+    attributions: '!نعتذر من سيادتك',
+    url: './data/PenguinIN.jpg',
+    projection: projection,
+    imageExtent: extent,  
+  }),
+  name:'ImageLayer',
+});
+map1.addLayer(ImageLayer);
+map1.setView=new ol.View({
+  projection: projection,
+  center: ol.extent.getCenter(extent),
+  zoom: 0,
+  maxZoom: 8,
+});
+
+
+// Change from mercator to lon/lat
+
+map1.on('click',function(e){
+  console.log('Coordinate in Mercator: ',e.coordinate);
+  console.log('Coordinate in LON|LAT',meters2degress(e.coordinate[0],e.coordinate[1]));
+  map1.forEachFeatureAtPixel(e.pixel,function(feature,layer){
+    console.log('Feature: just take the number for ID',feature.getProperties());
+    if(feature.values_.name){
+      if(feature.values_.name.split(' ')[0] != 'poi'){
+        $('#from').val(feature.values_.name.split(' ')[1]); 
+      }else{
+        $('#to').val(feature.values_.name.split(' ')[1]); 
+      }}
+  });});
+
+
+const handleImageChange = (event) => {
+  map1.removeLayer(ImageLayer);
+  var loadingLayer= new ol.layer.Image({
+    source: new ol.source.ImageStatic({
+      attributions: '!نعتذر من سيادتك',
+      url: './data/loading.png',
+      projection: projection,
+      imageExtent: extent,  
+    }),
+    name:'loading',
+  });
+  map1.addLayer(loadingLayer);
+
+  if (event.target.files[0]) {
+    let image = event.target.files[0];
+    console.log(image);
+    const uploadTask = storage.ref(`modCms/${image.name}`).put(image);
+    console.log(uploadTask,'uploadTask');
+    uploadTask.on(`state_changed`,
+      (snapshot) => {
+        // const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes)*100);
+      }, (error) => {
+      }, () => {
+        storage.ref(`modCms`).child(image.name).getDownloadURL().then(image => {
+          console.log('finallyyyyyyyyyyyyyyy',image);
+          imageUrl = image;
+
+          var firstPoint = new ol.Feature(new ol.geom.Point([41.13523608415221, 145.6426763732352]));
+          
+          var secPoint = new ol.Feature(new ol.geom.Point([200.1352360841522, 200.6426763732352]));
+
+          var lineFeature = new ol.Feature(
+            // new ol.geom.LineString([
+            //   [41.13523608415221, 145.6426763732352],
+            //   [200.1352360841522, 200.6426763732352] ]),
+          );
+            
+          var polygonFeature = new ol.Feature(
+            new ol.geom.Polygon([
+              // [
+              //   [-3e6, -1e6],
+              //   [-3e6, 1e6],
+              //   [-1e6, 1e6],
+              //   [-1e6, -1e6],
+              //   [-3e6, -1e6] ] 
+            ]),
+          );
+              
+          var marks=new ol.layer.Vector({
+            source: new ol.source.Vector({
+              features: [firstPoint,secPoint, lineFeature, polygonFeature],
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Icon({
+                anchor: [0.5, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                opacity: 0.95,
+                src: 'data/dot.svg',
+              }),
+              stroke: new ol.style.Stroke({
+                width: 3,
+                color: [255, 0, 0, 1],
+              }),
+              fill: new ol.style.Fill({
+                color: [0, 0, 255, 0.6],
+              }),
+            }),
+          });
+          map1.removeLayer(loadingLayer);
+          var ImageRenderdLayer= new ol.layer.Image({
+            source: new ol.source.ImageStatic({
+              attributions: '!نعتذر من سيدتك',
+              url: imageUrl,
+              projection: projection,
+              imageExtent: extent,
+            }),
+            name:'ImageRenderdLayer',
+          });
+          const baseLayerGroup1 = new ol.layer.Group({
+            layers:[
+              ImageRenderdLayer,marks,
+            ],
+          });
+          // map.addLayer(baseLayerGroup);//layer activation
+          map1.addLayer(baseLayerGroup1);
+          console.log('imageUrlimageUrlimageUrl',imageUrl);
+        });
+      });
+  }
+};
+
+// Handel input image.
+$('.inputImage').on('change', handleImageChange);
+
+
+var imageButton = document.getElementById('imageButton');//for search
+imageButton.onclick = function (event) {
+  // search(queryInput.value);
+  event.preventDefault();
+  console.log('ASdasdasd',imageUrl);
+
+
+  map.getLayers().forEach(layer => {
+    if (layer && layer.get('name') === 'Georef') {
+      map.removeLayer(layer);
+        
+    }
+  });
+  // console.log('here2');
+  var x = Number($('#x1').val());
+  var y= Number($('#y1').val());
+  var sx = Number($('#w1').val());
+  var sy = Number($('#h1').val());
+
+  // var xmin = Number($('#xmin').val());
+  // var ymin = Number($('#ymin').val());
+  // var xmax = Number($('#xmax').val());
+  // var ymax = Number($('#ymax').val());
+
+  var geoimg = new ol.layer.GeoImage({
+    name: 'Georef1',
+    opacity: .7,
+    minZoom:18,
+    maxZoom:40,
+    source: new ol.source.GeoImage({
+      url: imageUrl,
+      imageCenter: [x,y],
+      imageScale: [sx,sy],
+      // imageCrop: [xmin,ymin,xmax,ymax],
+      //imageMask: [[273137.343,6242443.14],[273137.343,6245428.14],[276392.157,6245428.14],[276392.157,6242443.14],[273137.343,6242443.14]],
+      imageRotate: Number($('#rotate').val()*Math.PI/180),
+      projection: 'EPSG:3857',
+      attributions: [ '<a href=\'http://www.geoportail.gouv.fr/actualite/181/telechargez-les-cartes-et-photographies-aeriennes-historiques\'>Photo historique &copy; IGN</a>' ],
+    }),
+  });
+  
+  
+  
+  // geoimg.getSource().setCenter([x,y]);
+  // geoimg.getSource().setRotation($('#rotate').val()*Math.PI/180);
+  // geoimg.getSource().setScale([sx,sy]);
+  // geoimg.getSource().setCrop([xmin,ymin,xmax,ymax]);
+  
+  // pointer2.setGeometry(new ol.geom.Point(([3992566.263943126+.004*(Number(ele.Y1)*Math.cos(angle*Math.PI/180)+ Number(ele.X1)*Math.sin(angle*Math.PI/180) )  , 3760166.192932204+.004*(Number(ele.X1)*Math.cos(angle*Math.PI/180)- Number(ele.Y1)*Math.sin(angle*Math.PI/180) )])));
+  // var crop = geoimg.getSource().getCrop();
+  // $('#xmin').val(crop[0]);
+  // $('#ymin').val(crop[1]);
+  // $('#xmax').val(crop[2]);
+  // $('#ymax').val(crop[3]); 
+  
+  // map.getLayers().forEach(layer => {
+  //   if (layer && layer.get('name') === 'Georef') {
+  //     map.removeLayer(layer);
+        
+  //   }
+  // });
+  map.addLayer(geoimg);
+
+};
 ////////////////////////////////////////////////////////////////////////////////
 
 

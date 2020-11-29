@@ -22,9 +22,17 @@
     </header>
     <main class="main">
         <div>
+              <div class="maps-div">
                 <div id = 'out-map' class="map">
-                <div id="map" class="map"></div>
+                  <div id="map" class="map"></div>
                 </div>
+                <div id = 'out-map' class="map">
+                  <div id="map1" class="map"></div>
+                </div>
+              </div>  
+
+              <input type="file" class="inputImage" size="60" />
+              <button id="imageButton">Press to desplay</button>
                 <!-- Select floor -->
                 <!-- <form class="form-inline">
                   <label>Action type &nbsp;</label>
@@ -155,6 +163,8 @@
         </div>
     </main>
      <footer></footer>
+     <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
      <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/4.1.0/superagent.min.js" integrity="sha512-LJaxxgpiq7SihGQ21nejROsll6FRrgbs0Wxtgqb5x+Q0CJICA3vt8hlBxSD8NLsO+Yabgg3B7ARexiijKiojGg==" crossorigin="anonymous"></script>
@@ -162,6 +172,7 @@
      <script type="text/javascript" src="../libs/v6.4.3-dist/ol-ext.js"></script>
      <script type="text/javascript" src="../../dist/ol-ext.js"></script>
      <script src="https://unpkg.com/elm-pep"></script>
+     <script src="../fireBase.js"></script> 
      <script src="../main.js"></script> 
 </body>
 </html>
