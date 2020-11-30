@@ -11,7 +11,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 margin: 0 auto;
-width: 50%;
+width: 60%;
 }
 
 .header{
@@ -20,7 +20,7 @@ width: 50%;
 
 .map {
     height: 45vh;
-    width: 500px;
+    width: 600px;
     margin-top: 30px;
     border: 2px;
     border-color: aqua;

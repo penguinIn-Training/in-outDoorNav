@@ -1,5 +1,11 @@
 /* eslint-disable no-undef */
 'use strict';
+var f1=[3992584.5232188534 , 3760171.4411926344];
+var s1=[3992589.5514296293, 3760186.1624980844];
+
+var f2=[518.4422164902285, 224.6531387079889];
+var s2=[1020.9120038056586, 224.40287858002665];
+
 console.log('Hi');
 var imageUrl='';
 // Grid layer
@@ -76,8 +82,8 @@ var Drag = /*@__PURE__*/(function (PointerInteraction) {
  */
 function handleDownEvent(evt) {
   var map = evt.map;
-
   var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+    console.log(feature.values_,'asdasdasdasd');
     return feature;
   });
 
@@ -92,10 +98,38 @@ function handleDownEvent(evt) {
 /**
  * @param {import("../src/ol/MapBrowserEvent.js").default} evt Map browser event.
  */
+var cor3FromCenter = [];
+var cor4FromCenter = [];
+
 function handleDragEvent(evt) {
+  console.log(evt);
+  var map = evt.map;
   var deltaX = evt.coordinate[0] - this.coordinate_[0];
   var deltaY = evt.coordinate[1] - this.coordinate_[1];
+  var cor = this.coordinate_;
+  map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+    if(feature.values_.name=='point1'){
+      f1=cor;
+    }
+    if(feature.values_.name=='point2'){
+      s1=cor;
+    }
+    if(feature.values_.name=='point3'){
+      f2=cor;
+      cor3FromCenter[0] = f2[0] - centerOfEmage[0];
+      cor3FromCenter[1] = f2[1] - centerOfEmage[1]; 
+    }
+    if(feature.values_.name=='point4'){
+      s2=cor;
+      cor4FromCenter[0] = s2[0] - centerOfEmage[0];
+      cor4FromCenter[1] = s2[1] - centerOfEmage[1]; 
+    }
+    console.log(feature.values_,'1');
+    console.log(cor3FromCenter,cor4FromCenter,'cor4FromCenter');
+  });
   console.log(this.coordinate_[0],this.coordinate_[1]);
+
+  // if(){} 
   var geometry = this.feature_.getGeometry();
   geometry.translate(deltaX, deltaY);
 
@@ -153,22 +187,31 @@ var map = new ol.Map({
   }),
 });
 map.addInteraction(new Drag());
-var firstPoint1 = new ol.Feature(new ol.geom.Point([3992606.9437501617, 3760172.1916554505]));
+
+var firstPoint1 = new ol.Feature({
+  geometry: new ol.geom.Point(f1),
+  name:'point1'});
           
-var secPoint1 = new ol.Feature(new ol.geom.Point([3992597.389121626, 3760174.5803125845]));
+var secPoint1 = new ol.Feature({  
+  geometry: new ol.geom.Point(s1),
+  name:'point2'});
+
 
 var marks1=new ol.layer.Vector({
   zIndex:1,
+  name:'one',
   source: new ol.source.Vector({
     features: [firstPoint1,secPoint1],
   }),
   style: new ol.style.Style({
     image: new ol.style.Icon({
       anchor: [0, 0],
-      anchorXUnits: 'fraction',
+      anchorXUnits: 'pixels',
       anchorYUnits: 'pixels',
+      rotateWithView: true,
       opacity: 0.95,
-      src: 'data/dot.svg',
+      scale:.02,
+      src: 'data/center.png',
     }),
     stroke: new ol.style.Stroke({
       width: 1,
@@ -196,6 +239,7 @@ map.on('click',function(e){
   console.log('Coordinate in LON|LAT',meters2degress(e.coordinate[0],e.coordinate[1]));
   map.forEachFeatureAtPixel(e.pixel,function(feature,layer){
     console.log('Feature: just take the number for ID',feature.getProperties());
+    console.log({pixel:e.pixel});    
     if(feature.values_.name){
       if(feature.values_.name.split(' ')[0] != 'poi'){
         $('#from').val(feature.values_.name.split(' ')[1]); 
@@ -244,6 +288,7 @@ map1.setView=new ol.View({
 
 map1.on('click',function(e){
   console.log('Coordinate in Mercator: ',e.coordinate);
+  console.log('pixel: ',e.pixel);
   console.log('Coordinate in LON|LAT',meters2degress(e.coordinate[0],e.coordinate[1]));
   map1.forEachFeatureAtPixel(e.pixel,function(feature,layer){
     console.log('Feature: just take the number for ID',feature.getProperties());
@@ -255,7 +300,8 @@ map1.on('click',function(e){
       }}
   });});
 
-
+var imageSize= [];
+var centerOfEmage = [];
 const handleImageChange = (event) => {
   map1.removeLayer(ImageLayer);
   var loadingLayer= new ol.layer.Image({
@@ -282,10 +328,22 @@ const handleImageChange = (event) => {
         storage.ref(`modCms`).child(image.name).getDownloadURL().then(image => {
           console.log('finallyyyyyyyyyyyyyyy',image);
           imageUrl = image;
-
-          var firstPoint = new ol.Feature(new ol.geom.Point([41.13523608415221, 145.6426763732352]));
+          const img = new Image();
+          img.onload = function() {
+            imageSize.push(this.width,this.height);
+            console.log(this.width + 'x' + this.height);
+            console.log(imageSize);
+          };
+          img.src = imageUrl;
           
-          var secPoint = new ol.Feature(new ol.geom.Point([200.1352360841522, 200.6426763732352]));
+
+          var firstPoint = new ol.Feature({
+            geometry: new ol.geom.Point(f2),
+            name:'point3'});
+          
+          var secPoint = new ol.Feature({
+            geometry: new ol.geom.Point(s2),
+            name:'point4'});
 
           var lineFeature = new ol.Feature(
             // new ol.geom.LineString([
@@ -314,7 +372,8 @@ const handleImageChange = (event) => {
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'pixels',
                 opacity: 0.95,
-                src: 'data/dot.svg',
+                scale:0.02,
+                src: 'data/center.png',
               }),
               stroke: new ol.style.Stroke({
                 width: 3,
@@ -343,6 +402,8 @@ const handleImageChange = (event) => {
           // map.addLayer(baseLayerGroup);//layer activation
           map1.addLayer(baseLayerGroup1);
           console.log('imageUrlimageUrlimageUrl',imageUrl);
+          centerOfEmage= map1.getView().getCenter();
+          console.log(centerOfEmage,'CenterOfGeom');
         });
       });
   }
@@ -355,6 +416,34 @@ $('.inputImage').on('change', handleImageChange);
 var imageButton = document.getElementById('imageButton');//for search
 imageButton.onclick = function (event) {
   // search(queryInput.value);
+  console.log('f1',f1);
+  console.log('s1',s1);
+  console.log('f2',f2);
+  console.log('s2',s2);
+  var a = f1[0] - s1[0];
+  var b = f1[1] - s1[1];
+  var c = Math.sqrt( a*a + b*b );
+  console.log(c,'ccccccccccccc')
+  var d = f2[0] - s2[0];
+  var e = f2[1] - s2[1];
+  var f = Math.sqrt( d*d + e*e );
+  console.log(f,'fffffffffffffffffffff')
+  var angle1Rad = Math.atan((f1[1]-s1[1])/(f1[0]-s1[0]));
+  var angle1Deg = angle1Rad * 180 / Math.PI;
+  var angle2Rad = Math.atan((f2[1]-s2[1])/(f2[0]-s2[0]));
+  var angle2Deg = angle2Rad * 180 / Math.PI;
+  var difAng = -angle2Deg + angle1Deg;
+  console.log(difAng,cor3FromCenter,f1,'center1' );
+  var scale=c/f;
+  // pointer2.setGeometry(new ol.geom.Point(([3992566.263943126+.004*(Number(ele.Y1)*Math.cos(angle*Math.PI/180)+ Number(ele.X1)*Math.sin(angle*Math.PI/180) )  , 3760166.192932204+.004*(Number(ele.X1)*Math.cos(angle*Math.PI/180)- Number(ele.Y1)*Math.sin(angle*Math.PI/180) )])));
+  var firstValue =f1[0] +.004*(cor3FromCenter[1] * Math.cos(Math.PI/180)+ cor3FromCenter[0]*Math.sin(difAng*Math.PI/180) );
+  var secValue = f1[1] + .004*(cor3FromCenter[0] * Math.cos(difAng *Math.PI/180)- cor3FromCenter[1]*Math.sin(difAng*Math.PI/180) );
+  // var firstValue = (f1[0] + Math.sin(difAng) * cor3FromCenter[1] +  Math.cos(difAng) * cor3FromCenter[0] );
+  // var secValue = (f1[1] + Math.cos(difAng) * cor3FromCenter[1] +  Math.sin(difAng) * cor3FromCenter[0] );
+  var center =[firstValue,secValue];
+  console.log(angle1Deg,angle2Deg,difAng,center,firstValue,secValue, 'center' );
+  console.log(scale,'scale');
+
   event.preventDefault();
   console.log('ASdasdasd',imageUrl);
 
@@ -375,7 +464,7 @@ imageButton.onclick = function (event) {
   // var ymin = Number($('#ymin').val());
   // var xmax = Number($('#xmax').val());
   // var ymax = Number($('#ymax').val());
-
+  console.log(x,y,'x,y');
   var geoimg = new ol.layer.GeoImage({
     name: 'Georef1',
     opacity: .7,
@@ -393,8 +482,7 @@ imageButton.onclick = function (event) {
     }),
   });
   
-  
-  
+
   // geoimg.getSource().setCenter([x,y]);
   // geoimg.getSource().setRotation($('#rotate').val()*Math.PI/180);
   // geoimg.getSource().setScale([sx,sy]);
@@ -415,6 +503,7 @@ imageButton.onclick = function (event) {
   // });
   map.addLayer(geoimg);
 
+  
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1029,7 +1118,7 @@ async function  findPath(path,yes){
           }),
           icon: new ol.style.Style({
             image: new ol.style.Icon({
-              anchor: [0.5, 1],
+              anchor: [0, 0],
               src: 'data/icon.png',
             }),
           }),
